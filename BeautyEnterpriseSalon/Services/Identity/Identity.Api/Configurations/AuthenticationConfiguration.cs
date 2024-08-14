@@ -12,6 +12,8 @@ public static class AuthenticationConfiguration
         var settings = configuration.GetSection("AppSettings");
         services.Configure<Settings>(settings);
 
+        services.Configure<ConnectionSettings>(configuration.GetSection("ConnectionStrings"));
+
         var appSettings = settings.Get<Settings>();
         var key = Encoding.ASCII.GetBytes(appSettings.Secret!);
 

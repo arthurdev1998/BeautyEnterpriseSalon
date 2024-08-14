@@ -11,15 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{14
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Api", "Services\Identity\Identity.Api\Identity.Api.csproj", "{3CF81059-7633-4015-9153-F383D54855A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application", "Services\Identity\Identity.Api\Identity.Application\Identity.Application.csproj", "{8206447F-ECB4-418C-9176-CA11F36553C1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain", "Services\Identity\Identity.Domain\Identity.Domain.csproj", "{0D0F548B-E745-4AF2-BC7A-6334C24F9A06}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infra", "Services\Identity\Identity.Infra\Identity.Infra.csproj", "{D7A3F35B-7194-45B1-8FD1-6BBDEFFE0456}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Tests", "Services\Identity\Identity.Tests\Identity.Tests.csproj", "{96065E6B-4E21-4C7E-9F8D-507CBF6F4BE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildinBlocks.Core", "BuildingBlocks\BuildinBlocks.Core\BuildinBlocks.Core.csproj", "{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildinBlocks.Core", "BuildingBlocks\BuildinBlocks.Core\BuildinBlocks.Core.csproj", "{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application", "Services\Identity\Identity.Application\Identity.Application.csproj", "{B6459B63-336A-4D6A-8770-D70B4E62E072}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,6 @@ Global
 		{3CF81059-7633-4015-9153-F383D54855A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CF81059-7633-4015-9153-F383D54855A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CF81059-7633-4015-9153-F383D54855A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8206447F-ECB4-418C-9176-CA11F36553C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8206447F-ECB4-418C-9176-CA11F36553C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8206447F-ECB4-418C-9176-CA11F36553C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8206447F-ECB4-418C-9176-CA11F36553C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D0F548B-E745-4AF2-BC7A-6334C24F9A06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D0F548B-E745-4AF2-BC7A-6334C24F9A06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D0F548B-E745-4AF2-BC7A-6334C24F9A06}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6459B63-336A-4D6A-8770-D70B4E62E072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6459B63-336A-4D6A-8770-D70B4E62E072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6459B63-336A-4D6A-8770-D70B4E62E072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6459B63-336A-4D6A-8770-D70B4E62E072}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,11 +58,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{14BD0E70-1D96-42C6-A375-08F14672A9D9} = {7B887556-FBDB-44F1-9255-252B4A05A6B3}
 		{3CF81059-7633-4015-9153-F383D54855A6} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
-		{8206447F-ECB4-418C-9176-CA11F36553C1} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
 		{0D0F548B-E745-4AF2-BC7A-6334C24F9A06} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
 		{D7A3F35B-7194-45B1-8FD1-6BBDEFFE0456} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
 		{96065E6B-4E21-4C7E-9F8D-507CBF6F4BE7} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
 		{BE30CC11-4EA1-4E9A-88F9-7DCD97BD8615} = {197947D7-2281-4977-B220-E30BF3A24EA2}
+		{B6459B63-336A-4D6A-8770-D70B4E62E072} = {14BD0E70-1D96-42C6-A375-08F14672A9D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E0D51E80-B8D4-4430-AA7E-AB351031275F}
