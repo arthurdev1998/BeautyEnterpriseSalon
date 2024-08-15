@@ -14,7 +14,7 @@ public abstract class Command<TAggregateType, TResult> : Message<TAggregateType>
         ValidationResult = new ValidationResult();
     }
 
-    public virtual ValidationResult IsValid()
+    public ValidationResult Validation()
     {
         throw new NotImplementedException();
     }

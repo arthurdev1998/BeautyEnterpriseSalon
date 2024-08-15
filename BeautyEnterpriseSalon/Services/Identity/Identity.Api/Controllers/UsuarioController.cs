@@ -4,10 +4,13 @@ using System.Text;
 using BuildinBlocks.Core.Data;
 using Dapper;
 using Identity.Api.Configurations.Options;
+using Identity.Application.Commands;
 using Identity.Application.DbConnection;
 using Identity.Application.Dtos;
 using Identity.Application.Extension.DbExtensions;
+using Identity.Domain.Dtos;
 using Identity.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -19,11 +22,13 @@ public class UsuarioController : ControllerBase
 {
     private readonly IOptions<ConnectionSettings> _options;
     private readonly IConnectionPostgresqlFactory _connectionFactory;
+    private readonly IMediator _mediator;
 
-    public UsuarioController(IOptions<ConnectionSettings> options, IConnectionPostgresqlFactory connectionFactory)
+    public UsuarioController(IOptions<ConnectionSettings> options, IConnectionPostgresqlFactory connectionFactory, IMediator mediator)
     {
         _options = options;
         _connectionFactory = connectionFactory;
+        _mediator = mediator;
     }
 
     [HttpPost("{id}")]
@@ -68,5 +73,12 @@ public class UsuarioController : ControllerBase
 
             return result;
         }
+    }
+
+    [HttpPost("registrarUsuario")]
+    public async Task<IActionResult> RegistrarUsuario([FromBody] UsuarioInsertDto usuarioInsert)
+    {
+        var result = await _mediator.Send(new InsertUsuarioCommand(usuarioInsert));
+        return Ok();
     }
 }

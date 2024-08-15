@@ -8,7 +8,7 @@ namespace BuildinBlocks.Core.DomainObjects;
 
 public abstract class Entity<TIdentifierType> : IValidatable
     {
-        public required TIdentifierType Id { get; set; } 
+        public TIdentifierType? Id { get; set; }
 
         [NotMapped]
         private List<Event<TIdentifierType>>? _notificacoes;
@@ -19,7 +19,7 @@ public abstract class Entity<TIdentifierType> : IValidatable
     
         [JsonIgnore]
         [NotMapped]
-        public required ValidationResult ValidationResult { get; set; }
+        public  ValidationResult? ValidationResult { get; set; }
 
         public void AddEvent(Event<TIdentifierType> evento)
         {

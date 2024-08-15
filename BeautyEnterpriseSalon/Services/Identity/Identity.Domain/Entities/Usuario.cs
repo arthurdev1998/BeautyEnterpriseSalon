@@ -1,16 +1,28 @@
 using BuildinBlocks.Core.DomainObjects;
+using Identity.Domain.Extensions;
 
 namespace Identity.Domain.Entities;
 
-public class Usuario: Entity<Guid>, IAgreegateRoot
+public class Usuario : Entity<Guid>, IAgreegateRoot
 {
-    public required string Nome { get; set; }
+    public string? Nome { get; set; }
     public required string Email { get; set; }
     public byte[]? PasswordHash { get; set; }
     public byte[]? PasswordSalt { get; set; }
+    public DateTime CreateAt { get; set; }
 
     public override bool IsValid()
     {
-        throw new NotImplementedException();
+        return false;
+    }
+
+    public void AddHashPassword(string password)
+    {
+        PasswordHash = SecurityExtensions.EncoderPassword(password);
+    }
+
+    public void AddSaltPassoword()
+    {
+        PasswordSalt = SecurityExtensions.CreatePasswordSalt();
     }
 }

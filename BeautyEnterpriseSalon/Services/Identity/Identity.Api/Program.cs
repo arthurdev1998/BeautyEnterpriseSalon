@@ -1,8 +1,11 @@
+using System.Reflection;
 using Identity.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddServiceConfiguration();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGenConfiguration();
