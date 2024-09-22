@@ -1,14 +1,16 @@
 using System.Data;
 using BuildinBlocks.Core.Messages;
 using Dapper;
+using FluentValidation.Results;
 using Identity.Application.Commands;
-using Identity.Application.DbConnection;
+using Identity.Application.Dtos;
 using Identity.Application.Mappers;
+using Identity.Domain;
 using MediatR;
 
 namespace Identity.Application.Handlers;
 
-public class InsertUsuarioCommandHandler : IRequestHandler<InsertUsuarioCommand, CommandResult<InsertUsuarioCommand>>
+public class InsertUsuarioCommandHandler : IRequestHandler<InsertUsuarioCommand, CommandResult<UsuarioDto>>
 {
     private readonly IConnectionPostgresqlFactory _connectionPostgresql;
 
@@ -17,65 +19,30 @@ public class InsertUsuarioCommandHandler : IRequestHandler<InsertUsuarioCommand,
         _connectionPostgresql = connectionPostgresql;
     }
 
-    public async Task<CommandResult<InsertUsuarioCommand>> Handle(InsertUsuarioCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResult<UsuarioDto>> Handle(InsertUsuarioCommand request, CancellationToken cancellationToken)
     {
         if (!request.ConfirmPasswordIsValid())
         {
-            return CommandResult<InsertUsuarioCommand>.Fail("Senhas nao coincidem");
+            return CommandResult<UsuarioDto>.Fail("Senhas nao coincidem");
         }
 
         if (!request.Validation().IsValid)
         {
-            return CommandResult<InsertUsuarioCommand>.Fail(request.Validation().Errors.SelectMany(x => x.ErrorMessage).ToString()!);
+            return CommandResult<UsuarioDto>.Fail(string.Join("", request.Validation().Errors.SelectMany(x => x.ErrorMessage)));
         }
 
         var usuario = request.MapToNewUsuario();
 
         usuario.AddHashPassword(request.Password!);
-        usuario.AddSaltPassoword();
+        usuario.AddSaltPassoword(usuario.PasswordHash!);
 
-        using (IDbConnection dbConnection = _connectionPostgresql.Connection())
+        var response = await _connectionPostgresql.InsertUsuario(usuario);
+
+        if (response is null)
         {
-            dbConnection.Open();
-
-            // Correção da string SQL
-            string sql = @$"INSERT INTO public.usuarios
-            {nameof(usuario.Email)}, 
-            {nameof(usuario.Nome)}, 
-            password_hash, 
-            password_salt)
-
-            VALUES 
-                (@Email, @Nome, @PasswordHash, @PasswordSalt)";
-
-            // Definindo os parâmetros corretamente
-            var command = new
-            {
-                Nome = "naruto",
-                Email = usuario.Email,
-                PasswordHash = usuario.PasswordHash,
-                PasswordSalt = usuario.PasswordSalt
-            };
-
-            try
-            {
-                // Executa a inserção no banco de dados
-                var result = await dbConnection.ExecuteAsync(sql, command);
-
-                if (result > 0)
-                {
-                    return new CommandResult<InsertUsuarioCommand>(); // Sucesso
-                }
-                else
-                {
-                    return CommandResult<InsertUsuarioCommand>.Fail("Houve um erro ao salvar no banco de dados"); // Falha
-                }
-            }
-            catch (Exception ex)
-            {
-                // Captura e trata exceções
-                return CommandResult<InsertUsuarioCommand>.Fail($"Erro: {ex.Message}");
-            }
+            CommandResult<UsuarioDto>.Fail("Erro na query de inserção");
         }
+
+        return new CommandResult<UsuarioDto>(usuario.MapToUsuarioDto());
     }
 }

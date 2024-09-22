@@ -13,9 +13,9 @@ public static class SecurityExtensions
         return hmac.ComputeHash(passwordBytes);
     }
 
-    public static byte[] CreatePasswordSalt()
+    public static byte[] CreatePasswordSalt(byte[] hash)
     {
-        using var hmac = new HMACSHA512();
+        using var hmac = new HMACSHA512(hash);
         return hmac.Key;
     }
 }

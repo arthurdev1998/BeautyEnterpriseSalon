@@ -1,5 +1,5 @@
 using System.Text;
-using Identity.Api.Configurations.Options;
+using Identity.Domain.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,15 +17,15 @@ public static class AuthenticationConfiguration
         var appSettings = settings.Get<Settings>();
         var key = Encoding.ASCII.GetBytes(appSettings.Secret!);
 
-        services.AddAuthentication(x =>
+        services.AddAuthentication(options =>
         {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  // Request para JWT
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Response para JWT
-        }).AddJwtBearer(x =>
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  // Request para JWT
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Response para JWT
+        }).AddJwtBearer(options =>
         {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),

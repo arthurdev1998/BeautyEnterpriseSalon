@@ -1,8 +1,9 @@
-using Identity.Api.Configurations.Options;
-using Identity.Application.DbConnection;
-using Microsoft.AspNetCore.Connections;
+using Identity.Domain;
+using Identity.Domain.Options;
+using Identity.Infra.Data;
+using Identity.Infra.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using RabbitMQ.Client;
 
 namespace Identity.Api.Configurations;
 
@@ -12,11 +13,16 @@ public static class ServiceInjectionConfiguration
     {
         services.Configure<ConnectionSettings>(configuration.GetSection("ConnectionStrings"));
 
+        services.AddDbContext<IdentityContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("DbConnection") ?? 
+                throw new InvalidOperationException("Connection string not found.")));
+
         services.AddScoped<IConnectionPostgresqlFactory>(provider =>
         {
-        var options = provider.GetRequiredService<IOptions<ConnectionSettings>>().Value;
+            var options = provider.GetRequiredService<IOptions<ConnectionSettings>>().Value;
 
             return new ConnectionPostgresqlFactory(options.DbConnection!);
         });
+
     }
 }

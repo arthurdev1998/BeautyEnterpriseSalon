@@ -1,15 +1,17 @@
 using BuildinBlocks.Core.Messages;
 using FluentValidation.Results;
+using Identity.Application.Dtos;
 using Identity.Application.Validations;
 using Identity.Domain.Dtos;
+using Identity.Domain.Dtos.Usuarios;
 
 namespace Identity.Application.Commands;
 
-public class InsertUsuarioCommand : Command<string, CommandResult<InsertUsuarioCommand>>
+public class InsertUsuarioCommand : Command<string, CommandResult<UsuarioDto>>
 {
-    public  string? Email { get; set; }
-    public  string? Password { get; set; }
-    public  string? ConfirmPassword { get; set; }
+    public  string? Email { get; init; }
+    public  string? Password { get; init; }
+    public  string? ConfirmPassword { get; init; }
     public DateTime CreateAt { get; init; } = DateTime.UtcNow;
 
     public ValidationResult Validation()

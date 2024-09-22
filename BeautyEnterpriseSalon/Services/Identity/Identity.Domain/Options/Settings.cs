@@ -1,4 +1,4 @@
-namespace Identity.Api.Configurations.Options;
+namespace Identity.Domain.Options;
 
 public class Settings
 {

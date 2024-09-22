@@ -6,7 +6,7 @@ namespace Identity.Domain.Entities;
 public class Usuario : Entity<Guid>, IAgreegateRoot
 {
     public string? Nome { get; set; }
-    public required string Email { get; set; }
+    public string? Email { get; set; }
     public byte[]? PasswordHash { get; set; }
     public byte[]? PasswordSalt { get; set; }
     public DateTime CreateAt { get; set; }
@@ -21,8 +21,8 @@ public class Usuario : Entity<Guid>, IAgreegateRoot
         PasswordHash = SecurityExtensions.EncoderPassword(password);
     }
 
-    public void AddSaltPassoword()
+    public void AddSaltPassoword(byte[] hashPassword)
     {
-        PasswordSalt = SecurityExtensions.CreatePasswordSalt();
+        PasswordSalt = SecurityExtensions.CreatePasswordSalt(hashPassword);
     }
 }

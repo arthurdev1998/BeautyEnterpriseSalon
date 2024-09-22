@@ -1,15 +1,14 @@
 using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using BuildinBlocks.Core.Data;
 using Dapper;
-using Identity.Api.Configurations.Options;
 using Identity.Application.Commands;
-using Identity.Application.DbConnection;
 using Identity.Application.Dtos;
 using Identity.Application.Extension.DbExtensions;
+using Identity.Domain;
 using Identity.Domain.Dtos;
+using Identity.Domain.Dtos.Usuarios;
 using Identity.Domain.Entities;
+using Identity.Domain.Options;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -38,7 +37,7 @@ public class UsuarioController : ControllerBase
         {
             var parameter = new { id };
             string sql = "SELECT * FROM teste WHERE id = @Id";
-            var result = dbConnection.QuerySingleOrDefault<Teste>(sql, parameter);
+            var result = await dbConnection.QuerySingleOrDefaultAsync<Teste>(sql, parameter);
 
             return result;
         }
@@ -79,6 +78,14 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> RegistrarUsuario([FromBody] UsuarioInsertDto usuarioInsert)
     {
         var result = await _mediator.Send(new InsertUsuarioCommand(usuarioInsert));
-        return Ok();
+        if(result.ValidationResult.IsValid)
+        {
+            return Ok("Usuario Criado");
+        }
+
+        return BadRequest($"Erro ao criar usuario : \n{result.ValidationResult.Errors[0].ErrorMessage}");
     }
+
+    // [HttpPut("atualizarUsuario")]
+    // public async Task<IActionResult> AtualizarUsuario([FromBody])
 }
