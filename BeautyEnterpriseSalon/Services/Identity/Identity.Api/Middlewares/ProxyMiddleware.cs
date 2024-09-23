@@ -19,48 +19,42 @@ public class ProxyMiddleware
         {
             context.Response.Body = responseBody;
 
+            context.Response.Body.Position = 0;
+
+            StringBuilder headersRequest = new StringBuilder();
+
+            foreach (var item in context.Request.Headers)
+            {
+                headersRequest.AppendJoin("|", item);
+            }
+
+            // Ler a resposta
+            var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
+            var requestUrl = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
+
+
+            var log = new HttpRequestLog()
+            {
+                Id = Guid.NewGuid(),
+                RequestUrl = requestUrl,
+                RequestMethod = context.Request.Method,
+                ResponseBody = responseText,
+                ResponseStatus = context.Response.StatusCode,
+                ResponseHeaders = headersRequest.ToString()
+            };
+
             try
             {
-                await _next(context); // Processar a requisição
+                await _next(context);
+            }
+            catch(Exception ex)
+            {
+                log.ResponseBody = ex.Message;
+                log.ResponseStatus = 400;
+
             }
             finally
             {
-                context.Response.Body.Position = 0;
-
-                // Ler a resposta
-                var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
-                var requestUrl = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
-
-                StringBuilder headersRequest = new StringBuilder();
-
-                foreach (var item in context.Request.Headers)
-                {
-                    headersRequest.AppendJoin("|", item);
-                }
-
-                context.Response.Body.Position = 0; // Resetar a posição do stream
-
-
-
-                // Criar escopo para o repositório
-                using (var scope = context.RequestServices.CreateScope())
-                {
-                    var httpRequestLogRepository = scope.ServiceProvider.GetRequiredService<IHttpRequestLogRepository>();
-
-                    var log = new HttpRequestLog()
-                    {
-                        Id = Guid.NewGuid(),
-                        RequestUrl = requestUrl,
-                        RequestMethod = context.Request.Method,
-                        ResponseBody = responseText,
-                        ResponseStatus = context.Response.StatusCode,
-                        ResponseHeaders = headersRequest.ToString()
-                    };
-
-                    await httpRequestLogRepository.Add(log);
-                }
-
-                // Escrever a resposta de volta ao corpo original
                 await responseBody.CopyToAsync(originalBodyStream);
             }
         }
