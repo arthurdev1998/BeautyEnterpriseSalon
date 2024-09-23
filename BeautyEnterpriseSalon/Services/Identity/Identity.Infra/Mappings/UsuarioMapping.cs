@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Identity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
