@@ -1,11 +1,6 @@
 using Identity.Domain.Interfaces.ContextInterfaces;
 using Identity.Domain.Messages;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System.IO;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 public class ProxyMiddleware
 {
