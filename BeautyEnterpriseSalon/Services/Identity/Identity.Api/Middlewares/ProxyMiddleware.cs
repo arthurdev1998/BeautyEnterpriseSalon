@@ -5,10 +5,12 @@ using System.Text;
 public class ProxyMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly IHttpRequestLogRepository _httpRequestLogRepository;
 
-    public ProxyMiddleware(RequestDelegate next)
+    public ProxyMiddleware(RequestDelegate next, IHttpRequestLogRepository httpRequestLogRepository)
     {
         _next = next;
+        _httpRequestLogRepository = httpRequestLogRepository;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -55,6 +57,7 @@ public class ProxyMiddleware
             }
             finally
             {
+                await _httpRequestLogRepository.Add(log);
                 await responseBody.CopyToAsync(originalBodyStream);
             }
         }
